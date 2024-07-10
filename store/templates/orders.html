@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% load cart %}
+    {% load custom_filter %}
+    <div class="container">
+        <div class="border rounded p-4 m-4">
+            <p class="display-4 pl-4 ml-4">Your Orders</p>
+            <hr>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Sno.</th>
+                        <th>Image</th>
+                        <th>Product</th>
+                        <th>Date</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Action</th> <!-- Added column for action buttons -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><img style="height: 80px;" class="rounded-circle" src="{{ order.product.image.url }}" alt=""></td>
+                            <td>{{ order.product.name }}</td>
+                            <td>{{ order.date }}</td>
+                            <td>{{ order.price|currency }}</td>
+                            <td>{{ order.quantity }}</td>
+                            <td>{{ order.quantity|multiply:order.price|currency }}</td>
+                            {% if order.cancelled %}
+                                <td><small class="badge badge-danger">Cancelled</small></td>
+                            {% elif order.status %}
+                                <td><small class="badge badge-success">Completed</small></td>
+                            {% else %}
+                                <td><small class="badge badge-warning">Pending</small></td>
+                            {% endif %}
+                            <td>
+                                {% if not order.cancelled %}
+                                    <form action="{% url 'cancel_order' %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="order_id" value="{{ order.id }}">
+                                        <button type="submit" class="btn btn-danger btn-sm">Cancel Order</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
