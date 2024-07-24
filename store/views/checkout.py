@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-
+from django.utils.dateparse import parse_date
 from django.contrib.auth.hashers import check_password
 from store.models.customer import Customer
 from django.views import View
@@ -33,10 +33,19 @@ class CheckOut(View):
     def get(self, request):
         if not self.request.user.is_authenticated or not self.request.user.is_staff:
             return redirect('/admin/login/')  # Redirect non-authenticated or non-admin users to login page
-        orders = Order.objects.all()  # Get all orders
-        customers = Customer.objects.all()  # Get all customers
-        return render(request, 'backoffice.html', {'orders': orders, 'customers': customers})
+        
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_date')
+        
+        if start_date and end_date:
+            start_date = parse_date(start_date)
+            end_date = parse_date(end_date)
+            orders = Order.objects.filter(date__range=[start_date, end_date])
+        else:
+            orders = Order.objects.all()  # Get all orders if no date range is specified
 
+        customers = Customer.objects.all()  # Get all customers
+        return render(request, 'backoffice.html', {'orders': orders, 'customers': customers, 'start_date': start_date, 'end_date': end_date})
 
 
 from django.views import View

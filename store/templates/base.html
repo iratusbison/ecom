@@ -10,88 +10,160 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-  <!-- Font Awesome CSS -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
-    integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-
   <title>E-commerce Website</title>
 
   <style>
-    nav {
+    body {
+      padding-top: 56px; /* Space for fixed navbar */
+    }
+
+    .navbar {
       background-color: rgb(38, 0, 128);
     }
 
-    .one-edge-shadow {
-      box-shadow: 0 8px 2px -5px rgb(246, 245, 245);
+    .sidebar {
+      position: fixed;
+      top: 56px; /* Height of the navbar */
+      bottom: 0;
+      left: 0;
+      z-index: 1000;
+      padding: 48px 0 0; /* Height of the navbar */
+      overflow-x: hidden;
+      overflow-y: auto;
+      /* Sidebar color */
+      background-color: #f8f9fa;
     }
 
-    .display-8 {
-      font-weight: 200;
-      font-size: 30px;
-      color: teal; /* Corrected typo: font-colour to color */
+    .sidebar .nav-link {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .sidebar .nav-link:hover {
+      color: #007bff;
+    }
+
+    .main-content {
+      margin-left: 250px; /* Same as sidebar's width */
     }
   </style>
 </head>
 
 <body>
-  <!-- navbar -->
-  <nav class="one-edge-shadow navbar navbar-light sticky-top navbar-expand-lg navbar-dark">
-    <a class="navbar-brand ms-3 text-white" href="/">
-      <img src="https://www.freepnglogos.com/uploads/shopping-cart-png/shopping-cart-svg-png-icon-download-28.png"
-        style="width: 50px; height: 50px; color: white;" alt="Cart Icon"> E-Commerce
+  <!-- Top Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <a class="navbar-brand text-white" href="/">
+      <img src="https://www.freepnglogos.com/uploads/shopping-cart-png/shopping-cart-svg-png-icon-download-28.png" style="width: 50px; height: 50px;" alt="Logo"> E-Commerce
     </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-        
-        </li>
-      </ul>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <form class="form-inline ml-auto" method="get" action=".">
+        <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search for products, brands and more" aria-label="Search" value="{{ request.GET.q }}">
+        <button class="btn btn-outline-light" type="submit">Search</button>
+      </form>
 
-      <ul class="navbar-nav my-2 my-lg-0">
-        <li class="nav-item active">
-          <a class="nav-link" href="/cart">
-            Cart <span class="badge badge-success">{{ request.session.cart.keys|length }}</span>
-            <span class="sr-only">(current)</span>
-          </a>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/cart">Cart <span class="badge badge-success">{{ request.session.cart.keys|length }}</span></a>
         </li>
-
         {% if request.session.customer %}
-        <li class="nav-item active">
-          <a class="nav-link" href="/orders">Orders <span class="sr-only">(current)</span></a>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/orders">Orders</a>
         </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="/logout">Logout <span class="sr-only">(current)</span></a>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/logout">Logout</a>
         </li>
         {% else %}
-        <li class="nav-item active">
-          <a class="nav-link" href="/signup">Signup <span class="sr-only">(current)</span></a>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/signup">Signup</a>
         </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="/login">Login <span class="sr-only">(current)</span></a>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/login">Login</a>
         </li>
         {% endif %}
       </ul>
     </div>
   </nav>
-  <!---->
-  {% block content %}{% endblock %}
 
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <nav class="nav flex-column">
+      <div>
+      <label for="sort-price" class="list-group-item">Sort by Price:</label>
+      <select id="sort-price" class="form-control">
+          <option value="default">Popularity</option>
+          <option value="low-to-high">Low to High</option>
+          <option value="high-to-low">High to Low</option>
+        </div>
+        <div>
+          <label for="price-range" class="list-group-item">Filter by Price:</label>
+      <input type="range" class="form-control-range" id="price-range" min="0" max="100000" step="10">
+      <p id="price-range-value" class="text-center">0 - 100000</p>
+      </select>
+    </div>
+      <a class="nav-link" href="/">All Products</a>
+      {% for category in categories %}
+      <a class="nav-link" href="/?category={{category.id}}">{{ category.name }}</a>
+      {% endfor %}
+   
+     
+    </nav>
+  </div>
+  
+
+  <!-- Main content -->
+  <div class="main-content container-fluid mt-3">
+    {% block content %}{% endblock %}
+  </div>
+<!-- Optional JavaScript -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7H2IbX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script>
+    document.getElementById('sort-price').addEventListener('change', function () {
+        const sortValue = this.value;
+        const productsContainer = document.getElementById('products-list');
+        const products = Array.from(productsContainer.getElementsByClassName('product-card'));
+        
+        if (sortValue === 'low-to-high') {
+            products.sort((a, b) => parseFloat(a.getAttribute('data-price')) - parseFloat(b.getAttribute('data-price')));
+        } else if (sortValue === 'high-to-low') {
+            products.sort((a, b) => parseFloat(b.getAttribute('data-price')) - parseFloat(a.getAttribute('data-price')));
+        } else {
+            // Default sorting: by product id or any other default logic you have
+            products.sort((a, b) => parseInt(a.id) - parseInt(b.id));
+        }
+
+        products.forEach(product => {
+            productsContainer.appendChild(product);
+        });
+    });
+
+    document.getElementById('price-range').addEventListener('input', function () {
+        const maxPrice = this.value;
+        document.getElementById('price-range-value').innerText = `0 - ${maxPrice}`;
+        const products = document.querySelectorAll('.product-card');
+        
+        products.forEach(product => {
+            const price = parseFloat(product.getAttribute('data-price'));
+            if (price <= maxPrice) {
+                product.style.display = 'block';
+            } else {
+                product.style.display = 'none';
+            }
+        });
+    });
+</script>
   <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7H2IbX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 
 </html>
