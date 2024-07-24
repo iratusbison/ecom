@@ -3,6 +3,8 @@ from store.models.product import Products
 from store.models.category import Category
 from django.views import View
 
+from django.http import JsonResponse
+
 class Index(View):
     def post(self, request):
         product = request.POST.get('product')
@@ -25,11 +27,13 @@ class Index(View):
             cart[product] = 1
 
         request.session['cart'] = cart
-        print('cart', request.session['cart'])
-        return redirect('homepage')
+        # Prepare response data
+        new_quantity = cart.get(product, 0)
+        return JsonResponse({'success': True, 'new_quantity': new_quantity})
 
     def get(self, request):
         return HttpResponseRedirect(f'/store{request.get_full_path()[1:]}')
+
 
 def store(request):
     cart = request.session.get('cart')

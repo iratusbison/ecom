@@ -3,6 +3,7 @@
 
 <head>
   <!-- Required meta tags -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -13,157 +14,130 @@
   <title>E-commerce Website</title>
 
   <style>
-    body {
-      padding-top: 56px; /* Space for fixed navbar */
+    nav {
+      background-color: #343a40;
     }
 
-    .navbar {
-      background-color: rgb(38, 0, 128);
+    .navbar-brand {
+      color: #ffffff;
     }
 
-    .sidebar {
-      position: fixed;
-      top: 56px; /* Height of the navbar */
-      bottom: 0;
-      left: 0;
-      z-index: 1000;
-      padding: 48px 0 0; /* Height of the navbar */
-      overflow-x: hidden;
-      overflow-y: auto;
-      /* Sidebar color */
-      background-color: #f8f9fa;
+    .navbar-brand img {
+      filter: invert(1);
     }
 
-    .sidebar .nav-link {
-      font-weight: 500;
-      color: #333;
+    .navbar-toggler-icon {
+      filter: invert(1);
     }
 
-    .sidebar .nav-link:hover {
-      color: #007bff;
+    .form-control {
+      width: 400px;
     }
 
-    .main-content {
-      margin-left: 250px; /* Same as sidebar's width */
+    .btn-outline-light {
+      color: #ffffff;
+      border-color: #ffffff;
+    }
+
+    .btn-outline-light:hover {
+      background-color: #ffffff;
+      color: #343a40;
+    }
+
+    .badge-success {
+      background-color: #28a745;
+    }
+
+    .nav-link {
+      color: #ffffff;
+    }
+
+    .nav-link:hover {
+      color: #d4d4d4;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    .one-edge-shadow {
+      box-shadow: 0 8px 2px -5px rgba(0, 0, 0, 0.2);
+    }
+
+    .display-8 {
+      font-weight: 200;
+      font-size: 30px;
     }
   </style>
 </head>
 
 <body>
-  <!-- Top Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-    <a class="navbar-brand text-white" href="/">
-      <img src="https://www.freepnglogos.com/uploads/shopping-cart-png/shopping-cart-svg-png-icon-download-28.png" style="width: 50px; height: 50px;" alt="Logo"> E-Commerce
+  <!-- navbar -->
+  <nav class="one-edge-shadow navbar navbar-dark sticky-top navbar-expand-lg text-white">
+    <a class="navbar-brand ms-3" href="/">
+      <img src="https://www.freepnglogos.com/uploads/shopping-cart-png/shopping-cart-svg-png-icon-download-28.png" style="width:50px;height:50px;"> E-Commerce
     </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <form class="form-inline ml-auto" method="get" action=".">
-        <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search for products, brands and more" aria-label="Search" value="{{ request.GET.q }}">
-        <button class="btn btn-outline-light" type="submit">Search</button>
-      </form>
+    <form class="form-inline ml-auto" method="get" action=".">
+      <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search for products, brands and more" aria-label="Search" value="{{ request.GET.q }}">
+      <button class="btn btn-outline-light" type="submit">Search</button>
+    </form>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active"></li>
+      </ul>
 
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="nav-link text-white" href="/cart">Cart <span class="badge badge-success">{{ request.session.cart.keys|length }}</span></a>
+      <ul class="navbar-nav my-2 my-lg-0">
+        <li class="nav-item active">
+          <a class="nav-link" href="/cart">Cart
+            <span class="badge badge-success">{{request.session.cart.keys|length}}</span>
+            <span class="sr-only">(current)</span>
+          </a>
         </li>
+
         {% if request.session.customer %}
-        <li class="nav-item">
-          <a class="nav-link text-white" href="/orders">Orders</a>
+        <li class="nav-item active">
+          <a class="nav-link" href="/orders">Orders<span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" href="/logout">Logout</a>
+        <li class="nav-item active">
+          <a class="nav-link" href="/logout">Logout<span class="sr-only">(current)</span></a>
         </li>
         {% else %}
-        <li class="nav-item">
-          <a class="nav-link text-white" href="/signup">Signup</a>
+        <li class="nav-item active">
+          <a class="nav-link" href="/signup">Signup<span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" href="/login">Login</a>
+        <li class="nav-item active">
+          <a class="nav-link" href="/login">Login<span class="sr-only">(current)</span></a>
         </li>
         {% endif %}
       </ul>
     </div>
   </nav>
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <nav class="nav flex-column">
-      <div>
-      <label for="sort-price" class="list-group-item">Sort by Price:</label>
-      <select id="sort-price" class="form-control">
-          <option value="default">Popularity</option>
-          <option value="low-to-high">Low to High</option>
-          <option value="high-to-low">High to Low</option>
-        </div>
-        <div>
-          <label for="price-range" class="list-group-item">Filter by Price:</label>
-      <input type="range" class="form-control-range" id="price-range" min="0" max="100000" step="10">
-      <p id="price-range-value" class="text-center">0 - 100000</p>
-      </select>
-    </div>
-      <a class="nav-link" href="/">All Products</a>
-      {% for category in categories %}
-      <a class="nav-link" href="/?category={{category.id}}">{{ category.name }}</a>
-      {% endfor %}
-   
-     
-    </nav>
-  </div>
-  
+  {% block content %}{% endblock %}
 
-  <!-- Main content -->
-  <div class="main-content container-fluid mt-3">
-    {% block content %}{% endblock %}
-  </div>
-<!-- Optional JavaScript -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7H2IbX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<script>
-    document.getElementById('sort-price').addEventListener('change', function () {
-        const sortValue = this.value;
-        const productsContainer = document.getElementById('products-list');
-        const products = Array.from(productsContainer.getElementsByClassName('product-card'));
-        
-        if (sortValue === 'low-to-high') {
-            products.sort((a, b) => parseFloat(a.getAttribute('data-price')) - parseFloat(b.getAttribute('data-price')));
-        } else if (sortValue === 'high-to-low') {
-            products.sort((a, b) => parseFloat(b.getAttribute('data-price')) - parseFloat(a.getAttribute('data-price')));
-        } else {
-            // Default sorting: by product id or any other default logic you have
-            products.sort((a, b) => parseInt(a.id) - parseInt(b.id));
-        }
-
-        products.forEach(product => {
-            productsContainer.appendChild(product);
-        });
-    });
-
-    document.getElementById('price-range').addEventListener('input', function () {
-        const maxPrice = this.value;
-        document.getElementById('price-range-value').innerText = `0 - ${maxPrice}`;
-        const products = document.querySelectorAll('.product-card');
-        
-        products.forEach(product => {
-            const price = parseFloat(product.getAttribute('data-price'));
-            if (price <= maxPrice) {
-                product.style.display = 'block';
-            } else {
-                product.style.display = 'none';
-            }
-        });
-    });
-</script>
   <!-- Optional JavaScript -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7H2IbX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
 </body>
 
 </html>

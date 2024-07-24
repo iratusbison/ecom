@@ -5,56 +5,53 @@
 {% load cart %}
 {% load custom_filter %}
 
+<!-- body -->
 <div class="container-fluid mt-3">
     <div class="row">
-
-        <!-- filter and sort 
+        <!-- filter -->
         <div class="col-lg-3">
-            <div class="list-group">
+            <div class="list-group position-sticky" style="top: 1rem;">
                 <a href="/" class="list-group-item list-group-item-action btn btn-outline-success">All Products</a>
                 {% for category in categories %}
-                <a href="/?category={{category.id}}" class="list-group-item list-group-item-action btn btn-outline-success">
-                    {{category.name}}
-                </a>
+                <a href="/?category={{category.id}}" class="list-group-item list-group-item-action btn btn-outline-success">{{category.name}}</a>
                 {% endfor %}
-            </div>-->
-           
+            </div>
+        </div>
 
         <!-- all products -->
-        <div id='products' class="col-lg-9 mt-3">
-          
-
-            <div class="row" id="products-list">
-                {% for product in products %}<a href="{% url 'product_detail' product.id %}">
-                <div class="card mx-auto mb-3 product-card" id="{{product.id}}" style="width: 18rem;" data-name="{{ product.name }}" data-category="{{ product.category.name }}" data-price="{{ product.price }}">
-                    <img class="card-img-top" src="{{product.image.url}}" alt="Card image cap">
-                    <div class="card-body">
-                        <p class="card-title">{{product.name}}</p>
-                        <p class="card-text"><b>{{product.price|currency}}</b></p>
-                    </div></a>
-                    <div class="card-footer p-0 no-gutters">
-                        {% if product|is_in_cart:request.session.cart %}
-                        <div class="row no-gutters">
-                            <form action="/#{{product.id}}" class="col-2 " method="post">
-                                {% csrf_token %}
-                                <input hidden type="text" name='product' value='{{product.id}}'>
-                                <input hidden type="text" name='remove' value='True'>
-                                <input type="submit" value=" - " class="btn btn-block btn-success border-right">
-                            </form>
-                            <div class="text-center col btn btn-success">{{product|cart_quantity:request.session.cart}} in Cart</div>
-                            <form action="/#{{product.id}}" class="col-2 " method="post">
-                                {% csrf_token %}
-                                <input hidden type="text" name='product' value='{{product.id}}'>
-                                <input type="submit" value=" + " class="btn btn-block btn-success border-left">
-                            </form>
+        <div id='products' class="col-lg-9">
+            <div class="row">
+                {% for product in products %}
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-4" id="product-{{product.id}}">
+                    <div class="card h-100">
+                        <a href="{% url 'product_detail' product.id %}">
+                            <img class="card-img-top" src="{{product.image.url}}" alt="{{product.name}}">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{% url 'product_detail' product.id %}">{{product.name}}</a>
+                            </h5>
+                            <p class="card-text"><b>{{product.price|currency}}</b></p>
                         </div>
-                        {% else %}
-                        <form action="/#{{product.id}}" method="POST" class="btn-block">
-                            {% csrf_token %}
-                            <input hidden type="text" name='product' value='{{product.id}}'>
-                            <input type="submit" class="float-right btn btn-success form-control" value="Add To Cart">
-                        </form>
-                        {% endif %}
+                        <div class="card-footer">
+                          
+                            <div class="d-flex justify-content-between align-items-center">
+                                <form action="/#{{product.id}}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="product" value="{{product.id}}">
+                                    <input type="hidden" name="remove" value="True">
+                                    <button type="submit" class="btn btn-danger btn-sm">-</button>
+                                </form>
+                                <span class="text-success cart-quantity">{{product|cart_quantity:request.session.cart}} in Cart</span>
+                                <form action="/#{{product.id}}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="product" value="{{product.id}}">
+                                    <button type="submit" class="btn btn-success btn-sm">+</button>
+                                </form>
+                            </div>
+                            
+                           
+                        </div>
                     </div>
                 </div>
                 {% endfor %}
@@ -63,6 +60,47 @@
     </div>
 </div>
 
-
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle form submissions for adding/removing items from the cart
+        document.querySelectorAll('form[action*="/#"]').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+    
+                fetch(this.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update the cart UI based on the response data
+                        const productId = formData.get('product');
+                        const quantityElement = document.querySelector(`#product-${productId} .cart-quantity`);
+                        const button = document.querySelector(`#product-${productId} .btn-success`);
+    
+                        if (formData.get('remove')) {
+                            quantityElement.textContent = data.new_quantity > 0 ? `${data.new_quantity} in Cart` : '';
+                            if (data.new_quantity === 0) {
+                                button.textContent = 'Add To Cart';
+                            }
+                        } else {
+                            quantityElement.textContent = `${data.new_quantity} in Cart`;
+                            button.textContent = 'Remove from Cart';
+                        }
+                    } else {
+                        console.error('Failed to update cart:', data.error);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    });
+</script>
 
 {% endblock %}
