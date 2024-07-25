@@ -12,13 +12,13 @@ class OrderView(View):
     def get(self , request ):
         customer = request.session.get('customer')
         orders = Order.get_orders_by_customer(customer)
-        print(orders)
+        print(orders,"i don't know")
         return render(request , 'orders.html'  , {'orders' : orders})
     
 
 
     def post(self, request):
-        order_id = request.POST.get('order_id')  # Assuming order_id is passed via form
+        order_id = request.POST.get('order_id')  
         try:
             order = Order.objects.get(id=order_id)
             order.cancelled = True  # Marking the order as cancelled
