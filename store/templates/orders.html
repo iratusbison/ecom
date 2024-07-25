@@ -17,6 +17,7 @@
                             <h5 class="card-title">Order ID: {{ order.id }}</h5>
                         </div>
                         <div class="col-md-4 d-flex flex-column align-items-center">
+                            <p class="card-text"><img style="height: 80px;" class="rounded-circle" src="{{order.product.image.url}}" alt=""></p>
                             <p class="card-text"><strong>Product:</strong> {{ order.product.name }}</p>
                             <p class="card-text"><strong>Date:</strong> {{ order.date }}</p>
                         </div>
