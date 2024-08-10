@@ -24,3 +24,10 @@ class Order(models.Model):
     def get_orders_by_customer(customer_id):
         return Order.objects.filter(customer=customer_id).order_by('-date')
 
+    @staticmethod
+    def get_total_order_price(customer_id):
+        orders = Order.objects.filter(customer_id=customer_id, status=True)
+        return sum(order.price for order in orders)
+
+
+

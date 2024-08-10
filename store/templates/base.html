@@ -7,162 +7,177 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5X8f8pAFAuKoXfh5B3Q1QFhXGeQo/2Ae2shYr/K2PZL5RRJlBhRBCXoNYvFqIv7w" crossorigin="anonymous">
 
   <title>E-commerce Website</title>
 
   <style>
     body {
-      padding-top: 56px; /* Space for fixed navbar */
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f8fa;
+      color: #343a40;
     }
 
     .navbar {
-      background-color: rgb(38, 0, 128);
+      background-color: #ff5e57;
+      transition: background-color 0.3s ease;
     }
 
-    .sidebar {
-      position: fixed;
-      top: 56px; /* Height of the navbar */
-      bottom: 0;
-      left: 0;
-      z-index: 1000;
-      padding: 48px 0 0; /* Height of the navbar */
-      overflow-x: hidden;
-      overflow-y: auto;
-      /* Sidebar color */
-      background-color: #f8f9fa;
+    .navbar-brand {
+      color: #ffffff;
+      font-size: 1.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
     }
 
-    .sidebar .nav-link {
+    .navbar-brand img {
+      margin-right: 10px;
+      width: 50px;
+      height: 50px;
+      transition: transform 0.3s ease;
+    }
+
+    .navbar-toggler-icon {
+      filter: invert(1);
+    }
+
+    .form-control {
+      width: 400px;
+      transition: width 0.4s ease;
+      border: 2px solid #ff5e57;
+      border-radius: 20px;
+    }
+
+    .form-control:focus {
+      width: 450px;
+      border-color: #f78da7;
+    }
+
+    .btn-outline-light {
+      color: #ffffff;
+      border-color: #ffffff;
+      background-color: #ff5e57;
+      border-radius: 20px;
+    }
+
+    .btn-outline-light:hover {
+      background-color: #ffffff;
+      color: #ff5e57;
+    }
+
+    .badge-success {
+      background-color: #28a745;
+    }
+
+    .nav-link {
+      color: #ffffff;
       font-weight: 500;
-      color: #333;
+      transition: color 0.3s ease;
+      font-size: 1.1rem;
     }
 
-    .sidebar .nav-link:hover {
-      color: #007bff;
+    .nav-link:hover {
+      color: #fdfdfd;
     }
 
-    .main-content {
-      margin-left: 250px; /* Same as sidebar's width */
+    .footer {
+      background-color: #ff5e57;
+      color: #ffffff;
+      padding: 20px 0;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .footer a {
+      color: #fdfdfd;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      color: #ffffff;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
     }
   </style>
 </head>
 
 <body>
-  <!-- Top Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-    <a class="navbar-brand text-white" href="/">
-      <img src="https://www.freepnglogos.com/uploads/shopping-cart-png/shopping-cart-svg-png-icon-download-28.png" style="width: 50px; height: 50px;" alt="Logo"> E-Commerce
+  <!-- Navbar -->
+  <nav class="navbar navbar-dark sticky-top navbar-expand-lg">
+    <a class="navbar-brand ms-3" href="/">
+      <img src="https://www.freepnglogos.com/uploads/shopping-cart-png/shopping-cart-svg-png-icon-download-28.png" alt="Logo"> E-Commerce
     </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <form class="form-inline ml-auto" method="get" action=".">
         <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search for products, brands and more" aria-label="Search" value="{{ request.GET.q }}">
-        <button class="btn btn-outline-light" type="submit">Search</button>
+        <button class="btn btn-outline-light" type="submit">
+          <i class="fas fa-search"></i>
+        </button>
       </form>
-
-      <ul class="navbar-nav ml-auto">
+      <ul class="navbar-nav my-2 my-lg-0">
         <li class="nav-item">
-          <a class="nav-link text-white" href="/cart">Cart <span class="badge badge-success">{{ request.session.cart.keys|length }}</span></a>
+          <a class="nav-link" href="/cart">
+            <i class="fas fa-shopping-cart" style="color: #ffffff;"></i> Cart
+            <span class="badge badge-success">{{request.session.cart.keys|length}}</span>
+          </a>
         </li>
         {% if request.session.customer %}
         <li class="nav-item">
-          <a class="nav-link text-white" href="/orders">Orders</a>
+          <a class="nav-link" href="/orders">
+            <i class="fas fa-box" style="color: #fdfdfd;"></i> Orders
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="/logout">Logout</a>
+          <a class="nav-link" href="/logout">
+            <i class="fas fa-sign-out-alt" style="color: #fdfdfd;"></i> Logout
+          </a>
         </li>
         {% else %}
         <li class="nav-item">
-          <a class="nav-link text-white" href="/signup">Signup</a>
+          <a class="nav-link" href="/signup">
+            <i class="fas fa-user-plus" style="color: #fdfdfd;"></i> Signup
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="/login">Login</a>
+          <a class="nav-link" href="/login">
+            <i class="fas fa-sign-in-alt" style="color: #fdfdfd;"></i> Login
+          </a>
         </li>
         {% endif %}
       </ul>
     </div>
   </nav>
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <nav class="nav flex-column">
-      <div>
-      <label for="sort-price" class="list-group-item">Sort by Price:</label>
-      <select id="sort-price" class="form-control">
-          <option value="default">Popularity</option>
-          <option value="low-to-high">Low to High</option>
-          <option value="high-to-low">High to Low</option>
-        </div>
-        <div>
-          <label for="price-range" class="list-group-item">Filter by Price:</label>
-      <input type="range" class="form-control-range" id="price-range" min="0" max="100000" step="10">
-      <p id="price-range-value" class="text-center">0 - 100000</p>
-      </select>
-    </div>
-      <a class="nav-link" href="/">All Products</a>
-      {% for category in categories %}
-      <a class="nav-link" href="/?category={{category.id}}">{{ category.name }}</a>
-      {% endfor %}
-   
-     
-    </nav>
-  </div>
-  
+  <!-- Main Content -->
+  {% block content %}{% endblock %}
 
-  <!-- Main content -->
-  <div class="main-content container-fluid mt-3">
-    {% block content %}{% endblock %}
-  </div>
-<!-- Optional JavaScript -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7H2IbX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<script>
-    document.getElementById('sort-price').addEventListener('change', function () {
-        const sortValue = this.value;
-        const productsContainer = document.getElementById('products-list');
-        const products = Array.from(productsContainer.getElementsByClassName('product-card'));
-        
-        if (sortValue === 'low-to-high') {
-            products.sort((a, b) => parseFloat(a.getAttribute('data-price')) - parseFloat(b.getAttribute('data-price')));
-        } else if (sortValue === 'high-to-low') {
-            products.sort((a, b) => parseFloat(b.getAttribute('data-price')) - parseFloat(a.getAttribute('data-price')));
-        } else {
-            // Default sorting: by product id or any other default logic you have
-            products.sort((a, b) => parseInt(a.id) - parseInt(b.id));
-        }
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2024 E-Commerce. All Rights Reserved. | <a href="/privacy">Privacy Policy</a> | <a href="/terms">Terms of Service</a></p>
+  </footer>
 
-        products.forEach(product => {
-            productsContainer.appendChild(product);
-        });
-    });
-
-    document.getElementById('price-range').addEventListener('input', function () {
-        const maxPrice = this.value;
-        document.getElementById('price-range-value').innerText = `0 - ${maxPrice}`;
-        const products = document.querySelectorAll('.product-card');
-        
-        products.forEach(product => {
-            const price = parseFloat(product.getAttribute('data-price'));
-            if (price <= maxPrice) {
-                product.style.display = 'block';
-            } else {
-                product.style.display = 'none';
-            }
-        });
-    });
-</script>
   <!-- Optional JavaScript -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7H2IbX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+1Y1Mtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 
