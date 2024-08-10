@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {% extends 'base.html' %}
 
 {% block content %}
@@ -79,42 +78,6 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .card-footer {
-        background-color: transparent;
-        border-top: none;
-    }
-
-    .btn-danger, .btn-success {
-        border-radius: 20px;
-        transition: background-color 0.3s;
-    }
-
-    .btn-danger:hover, .btn-success:hover {
-        background-color: #f81c3f;
-    }
-
-    @keyframes fadeInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-50px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(50px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
     .catalog-container {
         overflow: hidden;
         position: relative;
@@ -165,66 +128,6 @@
         color: #333;
     }
 
-    /* Sidebar for Category Navigation */
-    .sidebar {
-        position: fixed;
-        top: 80px;
-        left: -250px; /* Initially hidden to the left */
-        width: 250px;
-        height: 100%;
-        background-color: #f81c3f;
-        padding: 15px;
-        overflow-y: auto;
-        transition: all 0.3s ease-in-out;
-        z-index: 1000;
-    }
-
-    .sidebar a {
-        display: block;
-        color: #ffffff;
-        padding: 10px 15px;
-        margin-bottom: 10px;
-        background-color: #c70034;
-        border-radius: 5px;
-        text-decoration: none;
-        font-size: 1.2rem;
-    }
-
-    .sidebar a:hover {
-        background-color: #c70034;
-    }
-
-    .sidebar-close {
-        text-align: right;
-    }
-
-    .sidebar-close button {
-        background-color: transparent;
-        border: none;
-        color: #ffffff;
-        font-size: 1.5rem;
-        cursor: pointer;
-    }
-
-    .sidebar-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 999;
-    }
-
-    .sidebar-open .sidebar {
-        left: 0; /* Slide in the sidebar */
-    }
-
-    .sidebar-open .sidebar-overlay {
-        display: block; /* Show the overlay */
-    }
-
     /* Cart Bubble */
     #cart-bubble {
         position: fixed;
@@ -268,33 +171,16 @@
     </div>
 </div>
 
-<!-- Sidebar for Category Navigation -->
-<div class="sidebar-overlay" onclick="closeSidebar()"></div>
-<div class="sidebar">
-    <div class="sidebar-close">
-        <button onclick="closeSidebar()">&times;</button>
-    </div>
-    <a href="/">All Products</a>
-    {% for category in categories %}
-    <a href="/?category={{category.id}}">{{category.name}}</a>
-    {% endfor %}
-</div>
-
-<!-- Button to Open Sidebar -->
-<button onclick="openSidebar()" style="position: fixed; top: 80px; left: 10px; z-index: 1001; background-color: #f81c3f;  color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 1.2rem;">
-    Categories
-</button>
-
 <!-- Sliding Catalog -->
 <div class="catalog-container">
     <div class="catalog-slider">
         {% for product in products|slice:":10" %}
         <div class="catalog-item">
             <a href="{% url 'product_detail' product.id %}">
-                <img class="catalog-img" src="{{product.image.url}}" alt="{{product.name}}">
+                <img class="catalog-img" src="{{ product.image.url }}" alt="{{ product.name }}">
                 <div class="catalog-info">
-                    <h5 class="catalog-title">{{product.name}}</h5>
-                    <p class="catalog-price">{{product.price|currency}}</p>
+                    <h5 class="catalog-title">{{ product.name }}</h5>
+                    <p class="catalog-price">{{ product.price|currency }}</p>
                 </div>
             </a>
         </div>
@@ -306,29 +192,29 @@
 <div id='products' class="container mt-5">
     <div class="row">
         {% for product in products %}
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4" id="product-{{product.id}}">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4" id="product-{{ product.id }}">
             <div class="card h-100">
                 <a href="{% url 'product_detail' product.id %}">
-                    <img class="card-img-top" src="{{product.image.url}}" alt="{{product.name}}">
+                    <img class="card-img-top" src="{{ product.image.url }}" alt="{{ product.name }}">
                 </a>
                 <div class="card-body">
                     <h5 class="card-title">
-                        <a href="{% url 'product_detail' product.id %}" class="text-dark">{{product.name}}</a>
+                        <a href="{% url 'product_detail' product.id %}" class="text-dark">{{ product.name }}</a>
                     </h5>
-                    <p class="card-text"><b>{{product.price|currency}}</b></p>
+                    <p class="card-text"><b>{{ product.price|currency }}</b></p>
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-between align-items-center">
-                        <form action="/#{{product.id}}" method="post">
+                        <form action="/#{{ product.id }}" method="post">
                             {% csrf_token %}
-                            <input type="hidden" name="product" value="{{product.id}}">
+                            <input type="hidden" name="product" value="{{ product.id }}">
                             <input type="hidden" name="remove" value="True">
                             <button type="submit" class="btn btn-danger btn-sm">-</button>
                         </form>
-                        <span class="text-success cart-quantity">{{product|cart_quantity:request.session.cart}} in Cart</span>
-                        <form action="/#{{product.id}}" method="post">
+                        <span class="text-success cart-quantity">{{ product|cart_quantity:request.session.cart }} in Cart</span>
+                        <form action="/#{{ product.id }}" method="post">
                             {% csrf_token %}
-                            <input type="hidden" name="product" value="{{product.id}}">
+                            <input type="hidden" name="product" value="{{ product.id }}">
                             <button type="submit" class="btn btn-success btn-sm">+</button>
                         </form>
                     </div>
@@ -349,9 +235,6 @@
     document.addEventListener('DOMContentLoaded', function() {
         updateCartCount();
 
-        // Open the sidebar on initial load
-        document.body.classList.add('sidebar-open');
-
         const slider = document.querySelector('.catalog-slider');
         const scrollAmount = 200;
 
@@ -365,7 +248,7 @@
 
         setInterval(autoScroll, 3000);
 
-        // Sidebar open/close functions
+        // Handling the cart quantity updates
         document.querySelectorAll('form[action*="/#"]').forEach(form => {
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -386,7 +269,6 @@
                         const quantityElement = document.querySelector(`#product-${productId} .cart-quantity`);
                         const button = document.querySelector(`#product-${productId} .btn-success`);
 
-                        // Update quantity in cart and cart bubble
                         if (formData.get('remove')) {
                             quantityElement.textContent = data.new_quantity > 0 ? `${data.new_quantity} in Cart` : '';
                             if (data.new_quantity === 0) {
@@ -396,7 +278,6 @@
                             quantityElement.textContent = `${data.new_quantity} in Cart`;
                         }
 
-                        // Update cart count bubble live
                         updateCartCount();
                     } else {
                         console.error('Failed to update cart:', data.error);
@@ -405,348 +286,15 @@
                 .catch(error => console.error('Error:', error));
             });
         });
-    });
 
-    function updateCartCount() {
-        const cartCountElement = document.getElementById('cart-count');
-        let totalItems = 0;
-
-        // Calculate total items from the cart quantity displayed on the page
-        document.querySelectorAll('.cart-quantity').forEach(quantityElement => {
-            const text = quantityElement.textContent;
-            const match = text.match(/(\d+) in Cart/);
-            if (match) {
-                totalItems += parseInt(match[1]);
-            }
-        });
-
-        cartCountElement.textContent = totalItems;
-        cartCountElement.style.display = totalItems > 0 ? 'block' : 'none'; // Show/hide the count based on totalItems
-    }
-
-    function openSidebar() {
-        document.body.classList.add('sidebar-open');
-    }
-
-    function closeSidebar() {
-        document.body.classList.remove('sidebar-open');
-    }
-</script>
-
-{% endblock %}
-=======
-{% extends 'base.html' %}
-
-{% block content %}
-
-{% load cart %}
-{% load custom_filter %}
-
-<!-- Custom CSS -->
-<style>
-    body {
-        font-family: 'Helvetica Neue', sans-serif;
-        background-color: #f5f5f5;
-    }
-
-    .navbar {
-        background-color: #343a40;
-    }
-
-    .navbar-brand, .nav-link {
-        font-size: 1.2rem;
-        font-weight: bold;
-    }
-
-    .nav-link:hover {
-        background-color: #343a40;
-        border-radius: 5px;
-        transition: background-color 0.3s;
-    }
-
-    .banner {
-        background: url('https://picsum.photos/1920/1080') no-repeat center center;
-        background-size: cover;
-        height: 400px;
-        color: #fbfdff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-    }
-
-    .banner h1 {
-        font-size: 3rem;
-        animation: fadeInDown 1s;
-    }
-
-    .banner p {
-        font-size: 1.5rem;
-        animation: fadeInUp 1s;
-    }
-
-    .banner .btn {
-        background-color: #343a40;
-        border: none;
-        font-size: 1.2rem;
-        padding: 10px 20px;
-        animation: fadeInUp 1s;
-    }
-
-    .card {
-        border: none;
-        transition: transform 0.3s;
-    }
-
-    .card:hover {
-        transform: scale(1.05);
-    }
-
-    .card-img-top {
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
-    }
-
-    .card-body {
-        background-color: #fff;
-        border-radius: 0 0 15px 15px;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-footer {
-        background-color: transparent;
-        border-top: none;
-    }
-
-    .btn-danger, .btn-success {
-        border-radius: 20px;
-        transition: background-color 0.3s;
-    }
-
-    .btn-danger:hover, .btn-success:hover {
-        background-color: #343a40;
-    }
-
-    @keyframes fadeInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-50px);
+        function updateCartCount() {
+            const cartCount = document.querySelector('#cart-count');
+            const totalItems = [...document.querySelectorAll('.cart-quantity')]
+                .reduce((acc, elem) => acc + parseInt(elem.textContent.split(' ')[0] || 0), 0);
+            cartCount.textContent = totalItems || 0;
+            cartCount.style.display = totalItems ? 'block' : 'none';
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(50px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    .catalog-container {
-    overflow: hidden;
-    position: relative;
-    margin-bottom: 2rem;
-}
-
-.catalog-container {
-    overflow: hidden;
-    position: relative;
-    margin-bottom: 2rem;
-}
-
-.catalog-slider {
-    display: flex;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    gap: 1rem;
-    padding: 10px 0;
-    scroll-snap-type: x mandatory; /* Add this to snap items into place */
-}
-
-.catalog-item {
-    flex: 0 0 auto;
-    width: 200px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #fff;
-    transition: transform 0.3s;
-    scroll-snap-align: start; /* Add this to ensure items align correctly */
-}
-
-.catalog-item:hover {
-    transform: scale(1.05);
-}
-
-.catalog-img {
-    width: 100%;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-}
-
-.catalog-info {
-    padding: 10px;
-    text-align: center;
-}
-
-.catalog-title {
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-}
-
-.catalog-price {
-    font-size: 0.9rem;
-    color: #333;
-}
-
-
-</style>
-
-<!-- Banner -->
-<div class="banner">
-  <div>
-        <h1>Welcome to Our Store</h1>
-        <p>Discover the best products here</p>
-        <a href="#products" class="btn btn-primary">Shop Now</a>
-    </div>
-</div>
-<!-- Sliding Catalog -->
-<div>
-<div class="catalog-container">
-    <div class="catalog-slider">
-        {% for product in products|slice:":10" %}
-        <div class="catalog-item">
-            <a href="{% url 'product_detail' product.id %}">
-                <img class="catalog-img" src="{{product.image.url}}" alt="{{product.name}}">
-                <div class="catalog-info">
-                    <h5 class="catalog-title">{{product.name}}</h5>
-                    <p class="catalog-price">{{product.price|currency}}</p>
-                </div>
-            </a>
-        </div>
-        {% endfor %}
-        </div>
-    </div>
-</div>
-<!-- Category Navbar -->
-<div class="container mt-3">
-    <nav class="navbar navbar-expand-lg navbar-dark rounded mb-4">
-        <a class="navbar-brand" href="/">All Products</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#categoryNavbar" aria-controls="categoryNavbar" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="categoryNavbar">
-            <ul class="navbar-nav">
-                {% for category in categories %}
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="/?category={{category.id}}">
-                        {{category.name}}
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </nav>
-
-    <!-- All Products -->
-    <div id='products' class="row">
-        {% for product in products %}
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4" id="product-{{product.id}}">
-            <div class="card h-100">
-                <a href="{% url 'product_detail' product.id %}">
-                    <img class="card-img-top" src="{{product.image.url}}" alt="{{product.name}}">
-                </a>
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <a href="{% url 'product_detail' product.id %}" class="text-dark">{{product.name}}</a>
-                    </h5>
-                    <p class="card-text"><b>{{product.price|currency}}</b></p>
-                </div>
-                <div class="card-footer">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <form action="/#{{product.id}}" method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="product" value="{{product.id}}">
-                            <input type="hidden" name="remove" value="True">
-                            <button type="submit" class="btn btn-danger btn-sm">-</button>
-                        </form>
-                        <span class="text-success cart-quantity">{{product|cart_quantity:request.session.cart}} in Cart</span>
-                        <form action="/#{{product.id}}" method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="product" value="{{product.id}}">
-                            <button type="submit" class="btn btn-success btn-sm">+</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const slider = document.querySelector('.catalog-slider');
-        const scrollAmount = 200; // Adjust the scroll amount as needed
-
-        function autoScroll() {
-            if (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth) {
-                slider.scrollLeft = 0; // Reset scroll to start
-            } else {
-                slider.scrollLeft += scrollAmount;
-            }
-        }
-
-        setInterval(autoScroll, 3000); // Adjust interval as needed
-    });
-</script>
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('form[action*="/#"]').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const formData = new FormData(this);
-
-                fetch(this.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-                    },
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const productId = formData.get('product');
-                        const quantityElement = document.querySelector(`#product-${productId} .cart-quantity`);
-                        const button = document.querySelector(`#product-${productId} .btn-success`);
-
-                        if (formData.get('remove')) {
-                            quantityElement.textContent = data.new_quantity > 0 ? `${data.new_quantity} in Cart` : '';
-                            if (data.new_quantity === 0) {
-                                button.textContent = 'Add To Cart';
-                            }
-                        } else {
-                            quantityElement.textContent = `${data.new_quantity} in Cart`;
-
-                        }
-                    } else {
-                        console.error('Failed to update cart:', data.error);
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            });
-        });
     });
 </script>
 
 {% endblock %}
->>>>>>> origin/main
