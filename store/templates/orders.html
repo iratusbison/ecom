@@ -3,16 +3,68 @@
 {% block content %}
     {% load cart %}
     {% load custom_filter %}
+    <style>
+        body {
+            background-color: #181818; /* Dark background */
+            color: #ffffff; /* Light text */
+        }
+
+        .container {
+            background-color: #2c2c2c; /* Dark container */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .card {
+            background-color: #2c2c2c; /* Dark card background */
+            border: none; /* No border */
+            margin-bottom: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.02); /* Scale effect on hover */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); /* Shadow effect on hover */
+        }
+
+        .badge {
+            font-size: 0.85rem; /* Smaller badge font */
+        }
+
+        .btn-danger {
+            border-color: #f81c3f; /* Button outline color */
+            color: #f81c3f; /* Button text color */
+        }
+
+        .btn-danger:hover {
+            background-color: #f81c3f; /* Hover effect */
+            color: white; /* Light text on hover */
+        }
+
+        .btn-sm {
+            font-size: 0.85rem; /* Smaller button font */
+        }
+
+        .text-muted {
+            color: #cccccc; /* Muted text color */
+        }
+
+        img.rounded-circle {
+            border: 3px solid #f81c3f; /* Circle image border color */
+        }
+
+        .pl-4, .ml-4 {
+            padding-left: 1.5rem; /* Padding for title */
+            margin-left: 1.5rem; /* Margin for title */
+        }
+    </style>
+
     <div class="container">
         <div class="border rounded p-4 m-4">
-
-
             <p class="display-4 pl-4 ml-4">Your Orders</p>
-
             <hr>
-
-             <P>reward point:{{ reward_points }}</P>
-
+            <p>Reward Points: {{ reward_points }}</p>
 
             <!-- Order Cards -->
             {% for order in orders %}

@@ -3,6 +3,88 @@
 {% block content %}
 {% load cart %}
 {% load custom_filter %}
+<style>
+    body {
+        background-color: #181818; /* Dark background */
+        color: #ffffff; /* Light text */
+    }
+
+    .container {
+        background-color: #2c2c2c; /* Dark container */
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-success {
+        background-color: #f81c3f; /* Bright button */
+        border: none;
+    }
+
+    .btn-outline-danger {
+        border-color: #f81c3f; /* Button outline color */
+        color: #f81c3f;
+    }
+
+    .btn-outline-danger:hover {
+        background-color: #f81c3f; /* Hover effect */
+        color: white;
+    }
+
+    .btn-outline-success {
+        border-color: #f81c3f; /* Button outline color */
+        color: #f81c3f;
+    }
+
+    .btn-outline-success:hover {
+        background-color: #f81c3f; /* Hover effect */
+        color: white;
+    }
+
+    .card {
+        background-color: #2c2c2c; /* Dark card background */
+        border: none;
+        margin-bottom: 15px;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-img {
+        max-height: 200px;
+        object-fit: cover;
+    }
+
+    .modal-content {
+        background-color: #2c2c2c; /* Dark modal background */
+        color: #ffffff; /* Light text in modal */
+    }
+
+    .modal-header {
+        border-bottom: none; /* No border at the bottom of the header */
+    }
+
+    .form-control {
+        background-color: #444; /* Dark input background */
+        color: #ffffff; /* Light text */
+        border: 1px solid #666; /* Input border */
+    }
+
+    .form-control:focus {
+        background-color: #555; /* Darker input on focus */
+        color: #ffffff; /* Light text */
+        border-color: #f81c3f; /* Focus border color */
+        box-shadow: none; /* Remove default focus shadow */
+    }
+
+    .text-muted {
+        color: #cccccc; /* Muted text color */
+    }
+</style>
+
 <div class="container">
     <div class="border rounded p-4 m-4">
         <p class="display-4 pl-4 ml-4 btn btn-success rounded-pill">Your Cart</p>
@@ -12,8 +94,10 @@
         {% for product in products %}
         <div class="card mb-3">
             <div class="row no-gutters">
-                <div class="col-md-4"><a href="{% url 'product_detail' product.id %}">
-                    <img src="{{ product.image.url }}" class="card-img" alt="{{ product.name }}">
+                <div class="col-md-4">
+                    <a href="{% url 'product_detail' product.id %}">
+                        <img src="{{ product.image.url }}" class="card-img" alt="{{ product.name }}">
+                    </a>
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
@@ -49,7 +133,7 @@
     </div>
 </div>
 
-<!-- modal -->
+<!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
