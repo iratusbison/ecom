@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -13,7 +14,7 @@
     }
 
     .navbar {
-        background-color: #f81c3f;
+        background-color: #f81c3f; 
     }
 
     .navbar-brand, .nav-link {
@@ -49,7 +50,7 @@
     }
 
     .banner .btn {
-        background-color: #f81c3f;
+        background-color: #f81c3f; 
         border: none;
         font-size: 1.2rem;
         padding: 10px 20px;
@@ -76,6 +77,42 @@
         border-radius: 0 0 15px 15px;
         padding: 20px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-footer {
+        background-color: transparent;
+        border-top: none;
+    }
+
+    .btn-danger, .btn-success {
+        border-radius: 20px;
+        transition: background-color 0.3s;
+    }
+
+    .btn-danger:hover, .btn-success:hover {
+        background-color: #f81c3f; 
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .catalog-container {
@@ -128,6 +165,66 @@
         color: #333;
     }
 
+    /* Sidebar for Category Navigation */
+    .sidebar {
+        position: fixed;
+        top: 80px;
+        left: -250px; /* Initially hidden to the left */
+        width: 250px;
+        height: 100%;
+        background-color: #f81c3f; 
+        padding: 15px;
+        overflow-y: auto;
+        transition: all 0.3s ease-in-out;
+        z-index: 1000;
+    }
+
+    .sidebar a {
+        display: block;
+        color: #ffffff;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        background-color: #c70034; 
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 1.2rem;
+    }
+
+    .sidebar a:hover {
+        background-color: #c70034; 
+    }
+
+    .sidebar-close {
+        text-align: right;
+    }
+
+    .sidebar-close button {
+        background-color: transparent;
+        border: none;
+        color: #ffffff;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+
+    .sidebar-open .sidebar {
+        left: 0; /* Slide in the sidebar */
+    }
+
+    .sidebar-open .sidebar-overlay {
+        display: block; /* Show the overlay */
+    }
+
     /* Cart Bubble */
     #cart-bubble {
         position: fixed;
@@ -171,68 +268,67 @@
     </div>
 </div>
 
+<!-- Sidebar for Category Navigation -->
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+<div class="sidebar">
+    <div class="sidebar-close">
+        <button onclick="closeSidebar()">&times;</button>
+    </div>
+    <a href="/">All Products</a>
+    {% for category in categories %}
+    <a href="/?category={{category.id}}">{{category.name}}</a>
+    {% endfor %}
+</div>
+
+<!-- Button to Open Sidebar -->
+<button onclick="openSidebar()" style="position: fixed; top: 80px; left: 10px; z-index: 1001; background-color: #f81c3f;  color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 1.2rem;">
+    Categories
+</button>
+
 <!-- Sliding Catalog -->
 <div class="catalog-container">
     <div class="catalog-slider">
         {% for product in products|slice:":10" %}
         <div class="catalog-item">
             <a href="{% url 'product_detail' product.id %}">
-                <img class="catalog-img" src="{{ product.image.url }}" alt="{{ product.name }}">
+                <img class="catalog-img" src="{{product.image.url}}" alt="{{product.name}}">
                 <div class="catalog-info">
-                    <h5 class="catalog-title">{{ product.name }}</h5>
-                    <p class="catalog-price">{{ product.price|currency }}</p>
+                    <h5 class="catalog-title">{{product.name}}</h5>
+                    <p class="catalog-price">{{product.price|currency}}</p>
                 </div>
             </a>
         </div>
         {% endfor %}
     </div>
 </div>
-<!-- Category Navbar -->
-<div class="container mt-3">
-    <nav class="navbar navbar-expand-lg navbar-dark rounded mb-4">
-        <a class="navbar-brand" href="/">All Products</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#categoryNavbar" aria-controls="categoryNavbar" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="categoryNavbar">
-            <ul class="navbar-nav">
-                {% for category in categories %}
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="/?category={{category.id}}">
-                        {{category.name}}
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </nav>
+
 <!-- All Products -->
 <div id='products' class="container mt-5">
     <div class="row">
         {% for product in products %}
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4" id="product-{{ product.id }}">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4" id="product-{{product.id}}">
             <div class="card h-100">
                 <a href="{% url 'product_detail' product.id %}">
-                    <img class="card-img-top" src="{{ product.image.url }}" alt="{{ product.name }}">
+                    <img class="card-img-top" src="{{product.image.url}}" alt="{{product.name}}">
                 </a>
                 <div class="card-body">
                     <h5 class="card-title">
-                        <a href="{% url 'product_detail' product.id %}" class="text-dark">{{ product.name }}</a>
+                        <a href="{% url 'product_detail' product.id %}" class="text-dark">{{product.name}}</a>
                     </h5>
-                    <p class="card-text"><b>{{ product.price|currency }}</b></p>
+                    <p class="card-text"><b>{{product.price|currency}}</b></p>
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-between align-items-center">
-                        <form action="/#{{ product.id }}" method="post">
+                        <form action="/#{{product.id}}" method="post">
                             {% csrf_token %}
-                            <input type="hidden" name="product" value="{{ product.id }}">
+                            <input type="hidden" name="product" value="{{product.id}}">
                             <input type="hidden" name="remove" value="True">
                             <button type="submit" class="btn btn-danger btn-sm">-</button>
                         </form>
-                        <span class="text-success cart-quantity">{{ product|cart_quantity:request.session.cart }} in Cart</span>
-                        <form action="/#{{ product.id }}" method="post">
+                        <span class="text-success cart-quantity">{{product|cart_quantity:request.session.cart}} in Cart</span>
+                        <form action="/#{{product.id}}" method="post">
                             {% csrf_token %}
-                            <input type="hidden" name="product" value="{{ product.id }}">
+                            <input type="hidden" name="product" value="{{product.id}}">
                             <button type="submit" class="btn btn-success btn-sm">+</button>
                         </form>
                     </div>
@@ -253,6 +349,9 @@
     document.addEventListener('DOMContentLoaded', function() {
         updateCartCount();
 
+        // Open the sidebar on initial load
+        document.body.classList.add('sidebar-open');
+
         const slider = document.querySelector('.catalog-slider');
         const scrollAmount = 200;
 
@@ -266,7 +365,7 @@
 
         setInterval(autoScroll, 3000);
 
-        // Handling the cart quantity updates
+        // Sidebar open/close functions
         document.querySelectorAll('form[action*="/#"]').forEach(form => {
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -287,6 +386,7 @@
                         const quantityElement = document.querySelector(`#product-${productId} .cart-quantity`);
                         const button = document.querySelector(`#product-${productId} .btn-success`);
 
+                        // Update quantity in cart and cart bubble
                         if (formData.get('remove')) {
                             quantityElement.textContent = data.new_quantity > 0 ? `${data.new_quantity} in Cart` : '';
                             if (data.new_quantity === 0) {
@@ -296,6 +396,7 @@
                             quantityElement.textContent = `${data.new_quantity} in Cart`;
                         }
 
+                        // Update cart count bubble live
                         updateCartCount();
                     } else {
                         console.error('Failed to update cart:', data.error);
@@ -304,15 +405,33 @@
                 .catch(error => console.error('Error:', error));
             });
         });
-
-        function updateCartCount() {
-            const cartCount = document.querySelector('#cart-count');
-            const totalItems = [...document.querySelectorAll('.cart-quantity')]
-                .reduce((acc, elem) => acc + parseInt(elem.textContent.split(' ')[0] || 0), 0);
-            cartCount.textContent = totalItems || 0;
-            cartCount.style.display = totalItems ? 'block' : 'none';
-        }
     });
+
+    function updateCartCount() {
+        const cartCountElement = document.getElementById('cart-count');
+        let totalItems = 0;
+
+        // Calculate total items from the cart quantity displayed on the page
+        document.querySelectorAll('.cart-quantity').forEach(quantityElement => {
+            const text = quantityElement.textContent;
+            const match = text.match(/(\d+) in Cart/);
+            if (match) {
+                totalItems += parseInt(match[1]);
+            }
+        });
+
+        cartCountElement.textContent = totalItems;
+        cartCountElement.style.display = totalItems > 0 ? 'block' : 'none'; // Show/hide the count based on totalItems
+    }
+
+    function openSidebar() {
+        document.body.classList.add('sidebar-open');
+    }
+
+    function closeSidebar() {
+        document.body.classList.remove('sidebar-open');
+    }
 </script>
 
 {% endblock %}
+
