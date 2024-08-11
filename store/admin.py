@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models.product import Products, ProductAttribute, AttributeValue
+from .models.product import Products, ProductAttribute, AttributeValue, ProductImage
 from .models.category import Category, AttributeKey
 from .models.customer import Customer
 from .models.orders import Order
@@ -7,10 +7,14 @@ from .models.orders import Order
 class ProductAttributeInline(admin.TabularInline):
     model = ProductAttribute
     extra = 1
-
+    
+class ProductImageInline(admin.TabularInline):  
+    model = ProductImage
+    extra = 1  
+    
 class AdminProduct(admin.ModelAdmin):
     list_display = ['name', 'price', 'category']
-    inlines = [ProductAttributeInline]
+    inlines = [ProductAttributeInline, ProductImageInline]
 
 
 class CategoryAdmin(admin.ModelAdmin):
