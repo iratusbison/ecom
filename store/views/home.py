@@ -59,7 +59,15 @@ def store(request):
     print('you are :', request.session.get('email'))
     return render(request, 'index.html', data)
 
-
+from collections import defaultdict
 def product_detail(request, id):
     product = get_object_or_404(Products, id=id)
-    return render(request, 'product_detail.html', {'product': product})
+    grouped_attributes = defaultdict(list)
+    for attribute in product.product_attributes.all():
+        grouped_attributes[attribute.attribute_key.name].append(attribute.attribute_value.value)
+
+    context = {
+        'product': product,
+        'grouped_attributes': grouped_attributes,
+    }
+    return render(request, 'product_detail.html', context)

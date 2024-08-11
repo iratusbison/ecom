@@ -187,7 +187,25 @@
         {% endfor %}
     </div>
 </div>
-
+<!-- Category Navbar -->
+<div class="container mt-3">
+    <nav class="navbar navbar-expand-lg navbar-dark rounded mb-4">
+        <a class="navbar-brand" href="/">All Products</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#categoryNavbar" aria-controls="categoryNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="categoryNavbar">
+            <ul class="navbar-nav">
+                {% for category in categories %}
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="/?category={{category.id}}">
+                        {{category.name}}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
 <!-- All Products -->
 <div id='products' class="container mt-5">
     <div class="row">
