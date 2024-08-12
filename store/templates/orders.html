@@ -4,10 +4,11 @@
     {% load cart %}
     {% load custom_filter %}
     <style>
-        body {
-            background-color: #181818; /* Dark background */
-            color: #ffffff; /* Light text */
-        }
+       body {
+        font-family: 'Lobster', cursive;
+        background-color: #181818; /* Dark background */
+        color: #ffffff; /* Light text */
+    }
 
         .container {
             background-color: #2c2c2c; /* Dark container */
@@ -98,11 +99,12 @@
                         <div>
                             {% if not order.cancelled %}
                                 {% if not order.status %}
-                                    <form action="{% url 'cancel_order' %}" method="POST" class="d-inline">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="order_id" value="{{ order.id }}">
-                                        <button type="submit" class="btn btn-danger btn-sm">Cancel Order</button>
-                                    </form>
+                                   <form action="{% url 'cancel_order' %}" method="POST" class="d-inline">
+    {% csrf_token %}
+    <input type="hidden" name="order_id" value="{{ order.id }}">
+    <button type="submit" class="btn btn-danger btn-sm" style="color: white;">Cancel Order</button>
+</form>
+
                                 {% endif %}
                             {% endif %}
                         </div>

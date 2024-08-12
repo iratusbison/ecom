@@ -259,10 +259,34 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
     <script>
-        // Toggle search form visibility
-        document.getElementById('searchIcon').addEventListener('click', function () {
+        // Function to toggle search form visibility
+        function toggleSearchForm() {
             const searchForm = document.querySelector('.search-form');
-            searchForm.style.display = searchForm.style.display === 'none' || searchForm.style.display === '' ? 'block' : 'none';
+            const isVisible = searchForm.style.display === 'block';
+            searchForm.style.display = isVisible ? 'none' : 'block';
+            if (!isVisible) {
+                document.querySelector('.form-control').focus(); // Focus on the input field
+            }
+        }
+
+        // Toggle search form visibility on button click
+        document.getElementById('searchIcon').addEventListener('click', toggleSearchForm);
+
+        // Close the search form if clicking outside of it
+        document.addEventListener('click', function (event) {
+            const searchForm = document.querySelector('.search-form');
+            const searchButton = document.getElementById('searchIcon');
+
+            // Check if the click is outside the search form and button
+            if (!searchForm.contains(event.target) && !searchButton.contains(event.target)) {
+                searchForm.style.display = 'none';
+            }
+        });
+
+        // Close the search form when scrolling
+        window.addEventListener('scroll', function () {
+            const searchForm = document.querySelector('.search-form');
+            searchForm.style.display = 'none';
         });
     </script>
 </body>

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Navigation Buttons -->
+<div class="navigation">
+    <a href="{% url 'completed_orders' %}" class="btn btn-primary">Completed Orders</a>
+    <a href="{% url 'pending_orders' %}" class="btn btn-warning">Pending Orders</a>
+    <a href="{% url 'cancelled_orders' %}" class="btn btn-danger">Cancelled Orders</a>
+    <a href="{% url 'customer_list' %}" class="btn btn-info">Customer List</a>
+</div>
+
+<h1>Cancelled Orders</h1>
+<table>
+    <tr>
+        <th>Order ID</th>
+        <th>Product</th>
+        <th>Customer</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    {% for order in orders %}
+    <tr>
+        <td>{{ order.id }}</td>
+        <td>{{ order.product.name }}</td>
+        <td>{{ order.customer.name }}</td>
+        <td>Cancelled</td>
+        <td>
+            <form method="post" action="{% url 'cancelled_orders' %}">
+    {% csrf_token %}
+    <input type="hidden" name="order_id" value="{{ order.id }}">
+    <button type="submit" name="status" value="completed" class="btn btn-success">Mark as Completed</button>
+    <button type="submit" name="status" value="pending" class="btn btn-warning">Mark as Pending</button>
+</form>
+
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

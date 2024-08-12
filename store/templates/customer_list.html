@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Navigation Buttons -->
+<div class="navigation">
+    <a href="{% url 'completed_orders' %}" class="btn btn-primary">Completed Orders</a>
+    <a href="{% url 'pending_orders' %}" class="btn btn-warning">Pending Orders</a>
+    <a href="{% url 'cancelled_orders' %}" class="btn btn-danger">Cancelled Orders</a>
+    <a href="{% url 'customer_list' %}" class="btn btn-info">Customer List</a>
+</div>
+<body>
+    <h2>Customer List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer in customers %}
+            <tr>
+                <td>{{ customer.id }}</td>
+                <td>{{ customer.name }}</td>
+                <td>{{ customer.email }}</td>
+                <td>{{ customer.phone }}</td>
+                <td><a href="{% url 'customer_details' customer.id %}">View Details</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'backoffice' %}">Back to Back Office</a>
+</body>
+{% endblock %}

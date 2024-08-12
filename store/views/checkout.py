@@ -6,6 +6,8 @@ from django.views import View
 from django.contrib.auth.decorators import login_required
 from store.models.product import Products
 from store.models.orders import Order
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 
 class CheckOut(View):
@@ -19,48 +21,16 @@ class CheckOut(View):
 
         for product in products:
             print(cart.get(str(product.id)))
-            order = Order(customer=Customer(id=customer),
-                          product=product,
-                          price=product.price,
-                          address=address,
-                          phone=phone,
-                          quantity=cart.get(str(product.id)))
+            order = Order(
+                customer=Customer(id=customer),
+                product=product,
+                price=product.price,
+                address=address,
+                phone=phone,
+                quantity=cart.get(str(product.id))
+            )
             order.save()
         request.session['cart'] = {}
 
         return redirect('cart')
-    
-    def get(self, request):
-        if not self.request.user.is_authenticated or not self.request.user.is_staff:
-            return redirect('/admin/login/')  # Redirect non-authenticated or non-admin users to login page
-        
-        start_date = request.GET.get('start_date')
-        end_date = request.GET.get('end_date')
-        
-        if start_date and end_date:
-            start_date = parse_date(start_date)
-            end_date = parse_date(end_date)
-            orders = Order.objects.filter(date__range=[start_date, end_date])
-        else:
-            orders = Order.objects.all()  # Get all orders if no date range is specified
 
-        customers = Customer.objects.all()  # Get all customers
-        return render(request, 'backoffice.html', {'orders': orders, 'customers': customers, 'start_date': start_date, 'end_date': end_date})
-
-
-from django.views import View
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-
-
-class UpdateOrderStatus(View):
-    def post(self, request):
-        order_id = request.POST.get('order_id')
-        status = request.POST.get('status') == 'True'  # Convert string to boolean
-        try:
-            order = Order.objects.get(id=order_id)
-            order.status = status
-            order.save()
-        except Order.DoesNotExist:
-            pass  # Handle the case where the order does not exist
-        return HttpResponseRedirect(reverse('checkout'))  # Redirect back to the backoffice page

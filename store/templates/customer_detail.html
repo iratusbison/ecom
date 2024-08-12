@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Navigation Buttons -->
+<div class="navigation">
+    <a href="{% url 'completed_orders' %}" class="btn btn-primary">Completed Orders</a>
+    <a href="{% url 'pending_orders' %}" class="btn btn-warning">Pending Orders</a>
+    <a href="{% url 'cancelled_orders' %}" class="btn btn-danger">Cancelled Orders</a>
+    <a href="{% url 'customer_list' %}" class="btn btn-info">Customer List</a>
+</div>
+<body>
+    <h2>Customer Details</h2>
+    {% if customer %}
+        <p><strong>ID:</strong> {{ customer.id }}</p>
+        <p><strong>First Name:</strong> {{ customer.first_name }}</p>
+        <p><strong>Last Name:</strong>{{ customer.last_name }}</p>
+        <p><strong>Email:</strong> {{ customer.email }}</p>
+        <p><strong>Phone:</strong> {{ customer.phone }}</p>
+        <!-- Add more fields as needed -->
+    {% else %}
+        <p>Customer not found.</p>
+    {% endif %}
+    <a href="{% url 'customer_list' %}">Back to Customer List</a>
+</body>
+{% endblock %}
