@@ -3,6 +3,7 @@ from .models.product import Products, ProductAttribute, AttributeValue, ProductI
 from .models.category import Category, AttributeKey
 from .models.customer import Customer
 from .models.orders import Order
+from .models.advertise import AdImage
 
 class ProductAttributeInline(admin.TabularInline):
     model = ProductAttribute
@@ -34,3 +35,4 @@ admin.site.register(AttributeKey, AttributeKeyAdmin)
 admin.site.register(AttributeValue, AttributeValueAdmin)
 admin.site.register(Customer)
 admin.site.register(Order)
+admin.site.register(AdImage)

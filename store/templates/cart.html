@@ -54,8 +54,14 @@
     }
 
     .card-img {
-        max-height: 200px;
-        object-fit: cover;
+        width: 100%; /* Make the image take full width */
+        height: auto; /* Maintain aspect ratio */
+        object-fit: contain; /* Ensures the full image is shown */
+        transition: transform 0.3s; /* Smooth zoom effect */
+    }
+
+    .card-img:hover {
+        transform: scale(1.05); /* Zoom effect on hover */
     }
 
     .modal-content {
@@ -84,7 +90,7 @@
         color: #cccccc; /* Muted text color */
     }
 </style>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <div class="container">
     <div class="border rounded p-4 m-4">
         <p class="display-4 pl-4 ml-4 btn btn-success rounded-pill">Your Cart</p>

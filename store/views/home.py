@@ -3,6 +3,7 @@ from store.models.product import Products
 from store.models.category import Category
 from django.views import View
 from django.http import JsonResponse
+from store.models.advertise import AdImage
 
 class Index(View):
     def post(self, request):
@@ -35,6 +36,7 @@ class Index(View):
 
 
 def store(request):
+    ad_images = AdImage.objects.all()
     cart = request.session.get('cart')
     if not cart:
         request.session['cart'] = {}
@@ -53,7 +55,8 @@ def store(request):
 
     data = {
         'products': products,
-        'categories': categories
+        'categories': categories,
+        'ad_images': ad_images
     }
 
     print('you are :', request.session.get('email'))
