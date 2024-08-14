@@ -374,7 +374,7 @@
     .animated-banner .btn:hover {
         background-color: #c70034;
     }
-    
+
     #cart-bubble {
     transition: transform 0.2s;
 }
@@ -465,27 +465,8 @@
     </div>
 </div>
 
-<!-- Banner -->
-<div >
-    <div >
-        {% for image in ad_images %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-            <img src="{{ image.image.url }}" class="d-block w-100" alt="Ad Image">
-            <div class="carousel-caption d-none d-md-block">
-                <a href="#products" class="btn btn-primary">Shop Now</a>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    <a class="carousel-control-prev" href="#adImageCarousel" role="button" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#adImageCarousel" role="button" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </a>
-</div>
+
+
 <!-- All Products -->
 <div id='products' class="container mt-5">
     <div class="row">
@@ -501,6 +482,7 @@
                     </h5>
                     <p class="card-text"><b>{{product.price|currency}}</b></p>
                 </div>
+
                 <div class="card-footer">
                     <div class="d-flex justify-content-between align-items-center">
                         <form action="/#{{product.id}}" method="post">
@@ -515,11 +497,13 @@
                             <input type="hidden" name="product" value="{{product.id}}">
                             <button type="submit" class="btn btn-success btn-sm">+</button>
                         </form>
+
                     </div>
                 </div>
             </div>
         </div>
         {% endfor %}
+
     </div>
 </div>
 

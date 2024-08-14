@@ -92,6 +92,7 @@
     }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <div class="container">
     <div class="border rounded p-4 m-4">
         <p class="display-4 pl-4 ml-4 btn btn-success rounded-pill">Your Cart</p>
@@ -99,7 +100,7 @@
 
         <!-- Cart Items -->
         {% for product in products %}
-        <div class="card mb-3">
+        <div class="card mb-3" data-product-id="{{ product.id }}">
             <div class="row no-gutters">
                 <div class="col-md-4">
                     <a href="{% url 'product_detail' product.id %}">
@@ -108,24 +109,24 @@
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
-                        <h5 class="card-title">{{ product.name }}</h5></a>
+                        <h5 class="card-title">{{ product.name }}</h5>
                         <p class="card-text"><b>{{ product.price|currency }}</b></p>
                         <div class="d-flex align-items-center mb-2">
                             <form action="{% url 'cart' %}" method="post" class="mr-2">
                                 {% csrf_token %}
                                 <input type="hidden" name="product" value="{{ product.id }}">
                                 <input type="hidden" name="action" value="remove">
-                                <button type="submit" class="btn btn-outline-danger btn-sm">-</button>
+                                <button type="button" class="btn btn-outline-danger btn-sm decrease-qty" onclick="updateCart(this, -1)">-</button>
                             </form>
-                            <span class="mx-2">{{ product|cart_quantity:request.session.cart }}</span>
+                            <span class="mx-2 cart-quantity">{{ product|cart_quantity:request.session.cart }}</span>
                             <form action="{% url 'cart' %}" method="post" class="ml-2">
                                 {% csrf_token %}
                                 <input type="hidden" name="product" value="{{ product.id }}">
                                 <input type="hidden" name="action" value="add">
-                                <button type="submit" class="btn btn-outline-success btn-sm">+</button>
+                                <button type="button" class="btn btn-outline-success btn-sm increase-qty" onclick="updateCart(this, 1)">+</button>
                             </form>
                         </div>
-                        <p class="card-text"><small class="text-muted">Total: {{ product|price_total:request.session.cart|currency }}</small></p>
+                        <p class="card-text"><small class="text-muted">Total: <span class="product-total">{{ product|price_total:request.session.cart|currency }}</span></small></p>
                     </div>
                 </div>
             </div>
@@ -134,7 +135,7 @@
 
         <hr>
         <div class="d-flex justify-content-between align-items-center">
-            <h4>Total Price: {{ products|total_cart_price:request.session.cart|currency }}</h4>
+            <h4>Total Price: <span id="total-price">{{ products|total_cart_price:request.session.cart|currency }}</span></h4>
             <a href="#" data-toggle="modal" data-target="#exampleModal" class="btn btn-outline-success col-lg-3">Check out</a>
         </div>
     </div>
@@ -167,5 +168,48 @@
         </div>
     </div>
 </div>
+
+<script>
+function updateCart(button, change) {
+    const card = button.closest('.card');
+    const quantityElement = card.querySelector('.cart-quantity');
+    const productTotalElement = card.querySelector('.product-total');
+
+    // Update quantity
+    let currentQuantity = parseInt(quantityElement.textContent);
+    let newQuantity = currentQuantity + change;
+
+    // Ensure quantity doesn't go below 0
+    if (newQuantity < 0) {
+        newQuantity = 0;
+    }
+
+    // Update the displayed quantity
+    quantityElement.textContent = newQuantity;
+
+    // Update product total
+    const pricePerItem = parseFloat(productTotalElement.textContent.replace(/[^0-9.-]+/g,"")) / (currentQuantity || 1);
+    productTotalElement.textContent = (pricePerItem * newQuantity).toFixed(2) + ' ₹';
+
+    // Update overall total price
+    let totalPrice = 0;
+    document.querySelectorAll('.product-total').forEach(function(el) {
+        totalPrice += parseFloat(el.textContent.replace(/[^0-9.-]+/g,""));
+    });
+    document.getElementById('total-price').textContent = totalPrice.toFixed(2) + ' ₹';
+
+    // If quantity is zero, submit the remove form
+    if (newQuantity === 0) {
+        const form = button.closest('form');
+        form.submit();
+    } else {
+        // Otherwise, update the cart with a hidden form submission
+        const form = button.closest('form');
+        const actionField = form.querySelector('input[name="action"]');
+        actionField.value = change === 1 ? 'add' : 'remove';
+        form.submit();
+    }
+}
+</script>
 
 {% endblock %}

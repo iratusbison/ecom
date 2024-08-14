@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from .views.home import Index , store, product_detail
+from .views.home import Index , store, product_detail, WishlistView
 from .views.signup import Signup
 from .views.login import Login , logout
 from .views.cart import Cart
@@ -30,4 +30,6 @@ urlpatterns = [
     path('cancelled-orders/', CancelledOrders.as_view(), name='cancelled_orders'),
     path('staff-login/', StaffLoginView.as_view(), name='staff_login'),
     path('orders', auth_middleware(OrderView.as_view()), name='orders'),
+    path('wishlist/', WishlistView.as_view(), name='wishlist'),
+
 ]

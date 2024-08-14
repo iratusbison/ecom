@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load cart %}
+{% load custom_filter %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    body {
+        font-family: 'Lobster', cursive;
+        background-color: #181818; /* Dark background */
+        color: #ffffff; /* Light text */
+    }
+</style>
+
+
+    <h2 class="text-light">Your Wishlist</h2>
+    <div class="row">
+        {% for product in wishlist_products %}
+        <a href="{% url 'product_detail' product.id %}">
+        <div class="col-md-4 mb-4">
+            <div class="card text-light bg-dark">
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description }}</p>
+                    <p class="text-warning"><strong>Price: </strong>{{ product.price|currency }}</p>
+                    <form action="{% url 'wishlist' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        <input type="hidden" name="action" value="remove">
+                        <button type="submit" class="btn btn-outline-danger">Remove from Wishlist</button>
+                    </form>
+                </div>
+            </div></a>
+        </div>
+        {% empty %}
+        <p class="text-light">Your wishlist is empty.</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+<!-- Additional styles for dark mode -->
+<style>
+    body {
+        background-color: #1b1b1b; /* Dark background */
+        color: #f8f9fa; /* Light text color */
+    }
+
+    h2 {
+        color: #ff5e57; /* Accent color for headings */
+    }
+
+    .card-img-top {
+        max-height: 200px; /* Control the height of images */
+        object-fit: cover; /* Maintain aspect ratio */
+    }
+
+    .btn-outline-danger {
+        border-color: #ff5e57; /* Change border color for buttons */
+        color: #ff5e57; /* Button text color */
+    }
+
+    .btn-outline-danger:hover {
+        background-color: #ff5e57; /* Change background color on hover */
+        color: #ffffff; /* Change text color on hover */
+    }
+</style>
+
+{% endblock %}

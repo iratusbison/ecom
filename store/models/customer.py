@@ -6,7 +6,8 @@ class Customer(models.Model):
     phone = models.CharField(max_length=10)
     email=models.EmailField()
     password = models.CharField(max_length=100)
-    reward_points = models.IntegerField(default=0) 
+    reward_points = models.IntegerField(default=0)
+    wishlist = models.JSONField(default=list)
 
     #to save the data
     def register(self):

@@ -10,94 +10,36 @@
         background-color: #181818; /* Dark background */
         color: #ffffff; /* Light text */
     }
-</style>
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-6">
-            <div id="productCarousel" class="carousel slide" data-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="{{ product.image.url }}" class="d-block w-100" alt="{{ product.name }}">
-                    </div>
-                    {% for image in product.images.all %}
-                    <div class="carousel-item">
-                        <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ product.name }}">
-                    </div>
-                    {% endfor %}
-                </div>
-                <a class="carousel-control-prev" href="#productCarousel" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#productCarousel" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </div>
-        </div>
-       <div class="col-md-6 text-light">
-    <h2>{{ product.name }}</h2>
-    <p class="text-muted">Brand: {{ product.brand }}</p> <!-- Display brand if available -->
-    <p class="text-warning"><strong>Ratings: </strong>
-        {% for i in "12345" %}
-            <span class="fa fa-star{% if product.rating >= i|add:0 %} checked{% endif %}"></span>
-        {% endfor %}
-        ({{ product.rating_count }} reviews)
-    </p>
-    <p>{{ product.description }}</p>
-    
-    <ul class="list-unstyled text-light">
-        {% regroup product.product_attributes.all by attribute_key.name as grouped_attributes %}
-        {% for group in grouped_attributes %}
-            <strong>{{ group.grouper }}:</strong>
-            <ul>
-                {% for attribute in group.list %}
-                    <li>{{ attribute.attribute_value.value }}</li>
-                {% endfor %}
-            </ul>
-        {% endfor %}
-    </ul>
-    
-    <p><strong>Price: </strong>{{ product.price|currency }}</p>
-    <div class="d-flex flex-column flex-sm-row align-items-center">
-        <div class="d-flex align-items-center mb-2 mb-sm-0">
-            <form action="{% url 'cart' %}" method="post" class="mr-2">
-                {% csrf_token %}
-                <input type="hidden" name="product" value="{{ product.id }}">
-                <input type="hidden" name="action" value="remove">
-                <button type="submit" class="btn btn-outline-danger btn-sm">-</button>
-            </form>
-            <span class="mx-2">{{ product|cart_quantity:request.session.cart }}</span>
-            <form action="{% url 'cart' %}" method="post" class="ml-2">
-                {% csrf_token %}
-                <input type="hidden" name="product" value="{{ product.id }}">
-                <input type="hidden" name="action" value="add">
-                <button type="submit" class="btn btn-outline-success btn-sm">+</button>
-            </form>
-        </div>
-    </div>
-</div>
 
-
-           
-
-            
-       
-    </div>
-</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-
-<!-- Additional styles for dark mode -->
-<style>
-    body {
-        background-color: #1b1b1b; /* Dark background */
-        color: #f8f9fa; /* Light text color */
+    /* Heart animation */
+    .wishlist-heart {
+        color: #ff5e57;
+        font-size: 2rem;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out;
     }
 
+    .wishlist-heart:hover {
+        transform: scale(1.2);
+    }
+
+    .wishlist-heart.animated {
+        animation: bounce 0.5s;
+    }
+
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0);
+        }
+        40% {
+            transform: translateY(-10px);
+        }
+        60% {
+            transform: translateY(-5px);
+        }
+    }
+
+    /* Additional styles for dark mode */
     h2, h4 {
         color: #ff5e57; /* Accent color for headings */
     }
@@ -135,5 +77,115 @@
         color: #ffcc00; /* Filled star color */
     }
 </style>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div id="productCarousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{{ product.image.url }}" class="d-block w-100" alt="{{ product.name }}">
+                    </div>
+                    {% for image in product.images.all %}
+                    <div class="carousel-item">
+                        <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ product.name }}">
+                    </div>
+                    {% endfor %}
+                </div>
+                <a class="carousel-control-prev" href="#productCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#productCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-6 text-light">
+            <h2>{{ product.name }}</h2>
+            <p class="text-muted">Brand: {{ product.brand }}</p> <!-- Display brand if available -->
+            <p class="text-warning"><strong>Ratings: </strong>
+                {% for i in "12345" %}
+                    <span class="fa fa-star{% if product.rating >= i|add:0 %} checked{% endif %}"></span>
+                {% endfor %}
+                ({{ product.rating_count }} reviews)
+            </p>
+            <p>{{ product.description }}</p>
+
+            <ul class="list-unstyled text-light">
+                {% regroup product.product_attributes.all by attribute_key.name as grouped_attributes %}
+                {% for group in grouped_attributes %}
+                    <strong>{{ group.grouper }}:</strong>
+                    <ul>
+                        {% for attribute in group.list %}
+                            <li>{{ attribute.attribute_value.value }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            </ul>
+
+            <p><strong>Price: </strong>{{ product.price|currency }}</p>
+            <div class="d-flex flex-column flex-sm-row align-items-center">
+                <div class="d-flex align-items-center mb-2 mb-sm-0">
+                    <form class="cart-form" action="{% url 'product_detail' product.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="product" value="{{ product.id }}">
+                        <input type="hidden" name="action" value="remove">
+                        <button type="button" class="btn btn-outline-danger btn-sm decrease-qty" onclick="updateCart(this, -1)">-</button>
+                    </form>
+                    <span class="mx-2 cart-quantity">{{ product|cart_quantity:request.session.cart }}</span>
+                    <form class="cart-form" action="{% url 'product_detail' product.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="product" value="{{ product.id }}">
+                        <input type="hidden" name="action" value="add">
+                        <button type="button" class="btn btn-outline-success btn-sm increase-qty" onclick="updateCart(this, 1)">+</button>
+                    </form>
+                </div>
+                <!-- Wishlist button -->
+                <div class="ml-3">
+                    <form action="{% url 'wishlist' %}" method="post" class="wishlist-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        <input type="hidden" name="action" value="{% if wishlist_status %}remove{% else %}add{% endif %}">
+                        <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0;">
+                            <i class="fa fa-heart {% if wishlist_status %}checked{% endif %}" style="font-size: 2rem; color: #ff5e57;"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateCart(button, change) {
+    const form = button.closest('.cart-form');
+    const quantityElement = button.closest('.d-flex').querySelector('.cart-quantity');
+
+    // Update quantity
+    let currentQuantity = parseInt(quantityElement.textContent);
+    let newQuantity = currentQuantity + change;
+
+    // Ensure quantity doesn't go below 0
+    if (newQuantity < 0) {
+        newQuantity = 0;
+    }
+
+    // Update the displayed quantity
+    quantityElement.textContent = newQuantity;
+
+    // If quantity is zero, submit the remove form
+    if (newQuantity === 0) {
+        const actionField = form.querySelector('input[name="action"]');
+        actionField.value = 'remove';
+        form.submit();
+    } else {
+        const actionField = form.querySelector('input[name="action"]');
+        actionField.value = change === 1 ? 'add' : 'remove';
+        form.submit();
+    }
+}
+</script>
 
 {% endblock %}
