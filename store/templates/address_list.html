@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load cart %}
+{% load custom_filter %}
+
+<h2>Your Addresses</h2>
+<a href="{% url 'address_add' %}">Add New Address</a>
+<ul>
+    {% for address in addresses %}
+        <li>
+            {{ address }}
+            <a href="{% url 'address_edit' address.pk %}">Edit</a>
+            <a href="{% url 'address_delete' address.pk %}">Delete</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

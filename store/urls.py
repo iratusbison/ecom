@@ -8,10 +8,15 @@ from .views.checkout import CheckOut
 from .views.backoffice import UpdateOrderStatus, BackOffice, CustomerList, CustomerDetail, CompletedOrders, PendingOrders, CancelledOrders
 from .views.orders import OrderView
 from .views.staff_login import StaffLoginView
+from .views.address import address_list, address_add, address_edit, address_delete
 from .middlewares.auth import  auth_middleware
 
 
 urlpatterns = [
+    path('address_list/', address_list, name='address_list'),
+    path('addresses/add/', address_add, name='address_add'),
+    path('addresses/<int:pk>/edit/', address_edit, name='address_edit'),
+    path('addresses/<int:pk>/delete/', address_delete, name='address_delete'),
     path('', Index.as_view(), name='homepage'),
     path('store', store, name='store'),
     path('product/<int:id>/', product_detail, name='product_detail'),

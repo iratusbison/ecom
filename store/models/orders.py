@@ -1,20 +1,18 @@
 from django.db import models
 from .product import Products
 from .customer import Customer
+from .address import Address
 import datetime
 
 
 class Order(models.Model):
-    product = models.ForeignKey(Products,
-                                on_delete=models.CASCADE)
-    customer = models.ForeignKey(Customer,
-                                 on_delete=models.CASCADE)
+    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE)  # Reference to the Address model
     quantity = models.IntegerField(default=1)
     price = models.IntegerField()
-    address = models.CharField (max_length=50, blank=False)
-    phone = models.CharField (max_length=50, blank=False)
-    date = models.DateField (default=datetime.datetime.today)
-    status = models.BooleanField (default=False)
+    date = models.DateField(default=datetime.datetime.today)
+    status = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
 
     def placeOrder(self):
@@ -28,6 +26,4 @@ class Order(models.Model):
     def get_total_order_price(customer_id):
         orders = Order.objects.filter(customer_id=customer_id, status=True)
         return sum(order.price for order in orders)
-
-
 
