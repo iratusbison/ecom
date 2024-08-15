@@ -15,8 +15,7 @@ class Order(models.Model):
     status = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
 
-    attribute_key = models.ForeignKey(AttributeKey, on_delete=models.CASCADE, null=True, blank=True)
-    attribute_value = models.ForeignKey(AttributeValue, on_delete=models.CASCADE, null=True, blank=True)
+
 
 
     def placeOrder(self):
