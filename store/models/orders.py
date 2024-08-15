@@ -1,5 +1,5 @@
 from django.db import models
-from .product import Products
+from .product import Products, AttributeKey, AttributeValue
 from .customer import Customer
 from .address import Address
 import datetime
@@ -14,6 +14,10 @@ class Order(models.Model):
     date = models.DateField(default=datetime.datetime.today)
     status = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
+
+    attribute_key = models.ForeignKey(AttributeKey, on_delete=models.CASCADE, null=True, blank=True)
+    attribute_value = models.ForeignKey(AttributeValue, on_delete=models.CASCADE, null=True, blank=True)
+
 
     def placeOrder(self):
         self.save()

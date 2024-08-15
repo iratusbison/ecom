@@ -10,7 +10,7 @@ class Cart(View):
         cart = request.session.get('cart', {})
         ids = list(cart.keys())
         products = Products.get_products_by_id(ids)
-        
+
         customer_id = request.session.get('customer')
         if customer_id:
             customer = Customer.objects.get(id=customer_id)
@@ -38,4 +38,3 @@ class Cart(View):
                 cart[product_id] = 1
 
         request.session['cart'] = cart
-        return redirect('cart')
