@@ -15,4 +15,7 @@ six==1.15.0
 sqlparse==0.4.1
 toml==0.10.2
 virtualenv==20.4.3
+whitenoise==6.9.0
 wrapt==1.12.1
+# Production Server
+gunicorn
