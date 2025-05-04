@@ -30,8 +30,6 @@ jobs:
       run: |
         ssh ubuntu@${{ secrets.EC2_IP }} << 'EOF'
           cd /home/ubuntu/ecom
-          docker stop a1 || true
-          docker rm a1 || true
           docker build -t app .
           docker run -d --name app -p 8000:8000 app
         EOF
