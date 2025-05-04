@@ -3,41 +3,42 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main  # or change to your deployment branch
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    # Checkout the repository code
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Set up SSH key for GitHub Actions
     - name: Set up SSH key
       uses: webfactory/ssh-agent@v0.5.3
       with:
         ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
-    # Add EC2 to known hosts
     - name: Add EC2 to known hosts
       run: |
-        mkdir -p /home/runner/.ssh
-        ssh-keyscan -H ${{ secrets.EC2_IP }} >> /home/runner/.ssh/known_hosts
+        mkdir -p ~/.ssh
+        ssh-keyscan -H ${{ secrets.EC2_IP }} >> ~/.ssh/known_hosts
+      env:
+        SSH_AUTH_SOCK: ${{ env.SSH_AUTH_SOCK }}
 
-    # Copy project files to EC2
     - name: Copy project files to EC2
       run: |
         rsync -avz --exclude '.git' --exclude 'venv' ./ ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/ecom/
+      env:
+        SSH_AUTH_SOCK: ${{ env.SSH_AUTH_SOCK }}
 
-    # Build and run Docker on EC2
     - name: Run Docker build & deploy on EC2
       run: |
-        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} << 'EOF'
+        ssh ubuntu@${{ secrets.EC2_IP }} << 'EOF'
           cd /home/ubuntu/ecom
           docker stop a1 || true
           docker rm a1 || true
           docker build -t app .
           docker run -d --name app -p 8000:8000 app
-        EOF 
+        EOF
+      env:
+        SSH_AUTH_SOCK: ${{ env.SSH_AUTH_SOCK }}
