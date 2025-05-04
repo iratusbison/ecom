@@ -40,4 +40,4 @@ jobs:
           docker rm a1 || true
           docker build -t app .
           docker run -d --name app -p 8000:8000 app
-        EOF
+        EOF 
