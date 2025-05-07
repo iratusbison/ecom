@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Deploy Ecom to EC2
 
 on:
   push:
@@ -22,16 +22,21 @@ jobs:
       run: |
         ssh-keyscan -H ${{ secrets.EC2_IP }} >> ~/.ssh/known_hosts
 
-    - name: Copy project files to EC2
+    - name: Clone project on EC2
       run: |
-        rsync -avz --exclude '.git' --exclude 'venv' ./ ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/ecom/
- 
-    - name: Run Docker build & deploy on EC2
+        ssh ubuntu@${{ secrets.EC2_IP }} << 'EOF'
+          if [ ! -d "/home/ubuntu/ecom" ]; then
+            git clone https://github.com/iratusbison/ecom.git /home/ubuntu/ecom
+          else
+            cd /home/ubuntu/ecom
+            git pull origin main
+          fi
+        EOF
+
+    - name: Build and Run Docker Container
       run: |
         ssh ubuntu@${{ secrets.EC2_IP }} << 'EOF'
           cd /home/ubuntu/ecom
-          docker stop app || true
-          docker rm app || true
           docker build -t app .
           docker run -d --name app -p 8000:8000 app
         EOF
