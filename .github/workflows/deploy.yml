@@ -32,7 +32,7 @@ jobs:
             git pull origin main
           fi
         EOF
-
+ 
     - name: Build and Run Docker Container
       run: |
         ssh ubuntu@${{ secrets.EC2_IP }} << 'EOF'
